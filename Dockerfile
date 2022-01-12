@@ -8,4 +8,4 @@ RUN npm ci
 
 COPY ./app /app/
 
-CMD ["node", "app"]
+CMD ["node", "api/app"]

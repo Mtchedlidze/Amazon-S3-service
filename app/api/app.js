@@ -3,8 +3,8 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import swagger from 'swagger-ui-express'
 import cors from 'cors'
-import upload from './upload.js'
-import uploader from './storage.js'
+import storage from '../aws/storage.js'
+import uploader from '../uploader/uploader.js'
 import doc from './swagger.js'
 
 const app = express().use(bodyParser.json())
@@ -13,7 +13,7 @@ app.use(swagger.serve)
 app.get('/', swagger.setup(doc))
 
 app.post('/upload', uploader, async (req, res) => {
-  const { error, data } = await upload(req)
+  const { error, data } = await storage(req)
 
   if (error) return res.status(500).send(error)
 
