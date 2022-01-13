@@ -122,6 +122,21 @@ export default {
         responses: {
           200: {
             description: 'file statistics',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  example: {
+                    AcceptRanges: 'string',
+                    LastModified: 'date',
+                    ContentLength: 'number',
+                    ETag: 'string',
+                    ContentType: 'string',
+                    Metadata: 'object',
+                  },
+                },
+              },
+            },
           },
         },
       },

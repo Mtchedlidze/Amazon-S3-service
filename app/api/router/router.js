@@ -12,9 +12,14 @@ router.get('/open', (req, res) => {
   open(file, res)
 })
 
-router.get('/stats', (req, res) => {
+router.get('/stats', async (req, res) => {
   const { file } = req.query
-  getStats(file, res)
+  const { data, statusCode, error } = await getStats(file)
+
+  if (error) {
+    return res.status(statusCode).send(error)
+  }
+  res.send(data)
 })
 
 router.post('/upload', uploader, async (req, res) => {
