@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
-import s3 from './awsconfig.js'
-import getParams from './params.js'
+import s3 from '../awsconfig.js'
+import getParams from '../params.js'
 
 export default function storage(req) {
   const params = getParams(req)
