@@ -3,12 +3,18 @@ import open from '../../aws/controllers/open.js'
 import storage from '../../aws/controllers/storage.js'
 import uploader from '../../uploader/uploader.js'
 import deleteObj from '../../aws/controllers/delete.js'
+import getStats from '../../aws/controllers/stats.js'
 
 const router = express.Router()
 
 router.get('/open', (req, res) => {
   const { file } = req.query
   open(file, res)
+})
+
+router.get('/stats', (req, res) => {
+  const { file } = req.query
+  getStats(file, res)
 })
 
 router.post('/upload', uploader, async (req, res) => {

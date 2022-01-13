@@ -14,6 +14,16 @@ export default {
     '/upload': {
       post: {
         description: 'add file to filestorage',
+        parameters: [
+          {
+            in: 'query',
+            name: 'path',
+            schema: {
+              type: 'string',
+            },
+            required: false,
+          },
+        ],
         requestBody: {
           content: {
             'multipart/form-data': {
@@ -92,6 +102,26 @@ export default {
         responses: {
           200: {
             description: 'file deleted',
+          },
+        },
+      },
+    },
+    '/stats': {
+      get: {
+        description: 'get file statistics from filestorage',
+        parameters: [
+          {
+            in: 'query',
+            name: 'file',
+            schema: {
+              type: 'string',
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          200: {
+            description: 'file statistics',
           },
         },
       },
