@@ -7,7 +7,7 @@ export default function getParams(req) {
   const { path } = req.query
   const params = {
     Bucket: process.env.BUCKET,
-    Key: `${path}/${v4()}.${fileType}`,
+    Key: path ? `${path}/${v4()}.${fileType}` : `${v4()}.${fileType}`,
     Body: data.buffer,
   }
   return params
