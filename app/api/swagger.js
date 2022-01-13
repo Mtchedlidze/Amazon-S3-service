@@ -53,5 +53,48 @@ export default {
         },
       },
     },
+    '/open': {
+      get: {
+        description: 'open file from file storage',
+        parameters: [
+          {
+            in: 'query',
+            name: 'file',
+            schema: {
+              type: 'string',
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          200: {
+            description: 'file from file storage',
+          },
+          404: {
+            description: 'if file not found',
+          },
+        },
+      },
+    },
+    '/delete': {
+      delete: {
+        description: 'delete file from filestorage',
+        parameters: [
+          {
+            in: 'query',
+            name: 'file',
+            schema: {
+              type: 'string',
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          200: {
+            description: 'file deleted',
+          },
+        },
+      },
+    },
   },
 }
