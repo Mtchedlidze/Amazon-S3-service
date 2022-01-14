@@ -9,11 +9,9 @@ const router = express.Router()
 
 router.get('/open', async (req, res) => {
   const { file } = req.query
-  const { data, error, status } = await open(file)
-  if (error) {
-    return res.status(status).send(error)
-  }
-  data.pipe(res)
+  open(file)
+    .then((data) => res.send(data))
+    .catch((err) => res.status(err.status).send(err))
 })
 router.get('/stats', async (req, res) => {
   const { file } = req.query
