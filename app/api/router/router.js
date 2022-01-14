@@ -7,11 +7,14 @@ import getStats from '../../aws/controllers/stats.js'
 
 const router = express.Router()
 
-router.get('/open', (req, res) => {
+router.get('/open', async (req, res) => {
   const { file } = req.query
-  open(file, res)
+  const { data, error, status } = await open(file)
+  if (error) {
+    return res.status(status).send(error)
+  }
+  data.pipe(res)
 })
-
 router.get('/stats', async (req, res) => {
   const { file } = req.query
   const { data, statusCode, error } = await getStats(file)
@@ -36,7 +39,7 @@ router.delete('/delete', async (req, res) => {
   const { error, message } = deleteObj(file)
 
   if (error) {
-    return res.status(error.statusCode).send(error.message)
+    return res.status(500).send(error)
   }
 
   res.status(200).send(message)

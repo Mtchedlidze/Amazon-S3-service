@@ -1,16 +1,15 @@
 /* eslint-disable comma-dangle */
 import s3 from '../awsconfig.js'
 
-export default function deleteObj(file) {
+export default async function deleteObj(file) {
   const response = {}
 
-  s3.deleteObject({ Bucket: process.env.BUCKET, Key: file }).on(
-    'error',
-    (err) => {
-      response.error = new Error(err)
-    }
-  )
-  response.message = 'file deleted'
-
-  return response
+  try {
+    await s3.deleteObject({ Bucket: process.env.BUCKET, Key: file }).promise()
+    response.message = 'file deleted'
+    return response
+  } catch (error) {
+    response.error = error
+    return response
+  }
 }

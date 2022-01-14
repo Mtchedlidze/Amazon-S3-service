@@ -3,8 +3,8 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import swagger from 'swagger-ui-express'
 import cors from 'cors'
-import doc from './swagger.js'
 import router from './router/router.js'
+import doc from './swagger.js'
 
 const app = express().use(bodyParser.json())
 app.use(cors({ origin: '*' }))
