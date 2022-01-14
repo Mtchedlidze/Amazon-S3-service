@@ -4,14 +4,21 @@ import storage from '../../aws/controllers/storage.js'
 import uploader from '../../uploader/uploader.js'
 import deleteObj from '../../aws/controllers/delete.js'
 import getStats from '../../aws/controllers/stats.js'
+import generateError from '../../aws/controllers/generateError.js'
 
 const router = express.Router()
 
 router.get('/open', async (req, res) => {
   const { file } = req.query
-  open(file)
-    .then((data) => res.send(data))
-    .catch((err) => res.status(err.status).send(err))
+  const data = open(file)
+
+  data
+    .on('error', (err) => {
+      const error = generateError(err)
+
+      return res.status(error.status).send(error)
+    })
+    .pipe(res)
 })
 router.get('/stats', async (req, res) => {
   const { file } = req.query
@@ -23,7 +30,7 @@ router.get('/stats', async (req, res) => {
   res.send(data)
 })
 
-router.post('/upload', uploader, async (req, res) => {
+router.post('/create', uploader, async (req, res) => {
   const { error, data } = await storage(req)
 
   if (error) return res.status(500).send(error)
@@ -37,10 +44,10 @@ router.delete('/delete', async (req, res) => {
   const { error, message } = deleteObj(file)
 
   if (error) {
-    return res.status(500).send(error)
+    return res.status(error.status).send(error)
   }
 
-  res.status(200).send(message)
+  res.status(204).send(message)
 })
 
 export default router

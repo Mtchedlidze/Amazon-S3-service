@@ -1,20 +1,21 @@
 /* eslint-disable import/extensions */
 import s3 from '../awsconfig.js'
 import getParams from '../params.js'
+import generateError from './generateError.js'
 
-export default function storage(req) {
+export default async function storage(req) {
   const params = getParams(req)
+  try {
+    const data = await s3
+      .upload({
+        Key: params.Key,
+        Body: params.Body,
+        Bucket: params.Bucket,
+      })
+      .promise()
 
-  return new Promise((resolve, reject) => {
-    s3.upload(params, (error, data) => {
-      const response = {}
-      if (error) {
-        response.error = error
-        reject(response)
-      }
-
-      response.data = data
-      resolve(response)
-    })
-  })
+    return { data }
+  } catch (err) {
+    return { error: generateError(err) }
+  }
 }

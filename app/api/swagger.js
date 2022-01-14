@@ -11,7 +11,7 @@ export default {
     },
   ],
   paths: {
-    '/upload': {
+    '/create': {
       post: {
         description: 'add file to filestorage',
         parameters: [
