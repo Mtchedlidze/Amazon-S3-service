@@ -112,7 +112,7 @@ export default {
         parameters: [
           {
             in: 'query',
-            name: 'file',
+            name: 'path',
             schema: {
               type: 'string',
             },
