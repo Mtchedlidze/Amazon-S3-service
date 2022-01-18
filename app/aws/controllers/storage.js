@@ -1,7 +1,6 @@
 /* eslint-disable import/extensions */
 import s3 from '../awsconfig.js'
 import getParams from '../params.js'
-import generateError from './generateError.js'
 
 export default async function storage(req) {
   const params = getParams(req)
@@ -16,6 +15,6 @@ export default async function storage(req) {
 
     return { data }
   } catch (err) {
-    return { error: generateError(err) }
+    return { err }
   }
 }

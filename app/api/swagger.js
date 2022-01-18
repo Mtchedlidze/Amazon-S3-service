@@ -9,6 +9,9 @@ export default {
     {
       url: 'https://frozen-tundra-65150.herokuapp.com',
     },
+    {
+      url: 'http://localhost:3000',
+    },
   ],
   paths: {
     '/create': {
@@ -45,20 +48,20 @@ export default {
             content: {
               'application/json': {
                 schema: {
-                  type: 'object',
-                  example: {
-                    ETag: 'string',
-                    Location: 'string',
-                    key: 'string',
-                    Key: 'string',
-                    Bucket: 'string',
-                  },
+                  $ref: '#/components/schemas/createdResponse',
                 },
               },
             },
           },
-          500: {
-            description: 'error stack',
+          default: {
+            description: 'unexpected errors',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Error',
+                },
+              },
+            },
           },
         },
       },
@@ -82,6 +85,60 @@ export default {
           },
           404: {
             description: 'if file not found',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/fileNotFoundError',
+                },
+              },
+            },
+          },
+          default: {
+            description: 'unexpected errors',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Error',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/list': {
+      get: {
+        description: 'list of files in folder',
+        parameters: [
+          {
+            in: 'query',
+            name: 'file',
+            schema: {
+              type: 'string',
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          200: {
+            description: 'files from folder',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Listresponse',
+                },
+              },
+            },
+          },
+          default: {
+            description: 'unexpected errors',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Error',
+                },
+              },
+            },
           },
         },
       },
@@ -102,6 +159,16 @@ export default {
         responses: {
           200: {
             description: 'file deleted',
+          },
+          default: {
+            description: 'unexpected errors',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Error',
+                },
+              },
+            },
           },
         },
       },
@@ -125,20 +192,152 @@ export default {
             content: {
               'application/json': {
                 schema: {
-                  type: 'object',
-                  example: {
-                    AcceptRanges: 'string',
-                    LastModified: 'date',
-                    ContentLength: 'number',
-                    ETag: 'string',
-                    ContentType: 'string',
-                    Metadata: 'object',
-                  },
+                  $ref: '#/components/schemas/getstatsResponse',
+                },
+              },
+            },
+          },
+          404: {
+            description: 'if file does not exists',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/fileNotFoundError',
+                },
+              },
+            },
+          },
+          default: {
+            description: 'unexpected errors',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Error',
                 },
               },
             },
           },
         },
+      },
+    },
+  },
+  components: {
+    schemas: {
+      createdResponse: {
+        type: 'object',
+        properties: {
+          Etag: {
+            type: 'string',
+          },
+          Location: {
+            type: 'string',
+          },
+          Key: {
+            type: 'string',
+          },
+          Bucket: {
+            type: 'string',
+          },
+        },
+      },
+      Listresponse: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            Key: {
+              type: 'string',
+            },
+            LastModified: {
+              type: 'string',
+              format: 'date',
+            },
+            ETag: {
+              type: 'string',
+            },
+            Size: {
+              type: 'number',
+            },
+            StorageClass: {
+              type: 'string',
+              default: 'STANDARD',
+            },
+          },
+        },
+      },
+      getstatsResponse: {
+        type: 'object',
+        properties: {
+          AcceptRanges: {
+            type: 'string',
+            format: 'bytes',
+          },
+          LastModified: {
+            type: 'string',
+            format: 'date',
+          },
+          ContentLength: {
+            type: 'number',
+          },
+          ETag: {
+            type: 'string',
+          },
+          ContentType: {
+            type: 'string',
+            format: 'header',
+          },
+          MetaData: {
+            type: 'object',
+          },
+        },
+      },
+      fileNotFoundError: {
+        type: 'object',
+        properties: {
+          message: {
+            type: 'string',
+          },
+          code: {
+            type: 'string',
+          },
+          region: {
+            type: 'string',
+            default: null,
+          },
+          time: {
+            type: 'string',
+            format: 'date',
+          },
+          requestId: {
+            type: 'string',
+          },
+          extendedRequestId: {
+            type: 'string',
+          },
+          statusCode: {
+            type: 'number',
+            default: 404,
+          },
+          retryable: {
+            type: 'boolean',
+            default: false,
+          },
+          retryDelay: {
+            type: 'number',
+          },
+        },
+      },
+      Error: {
+        type: 'object',
+        properties: {
+          code: {
+            type: 'string',
+          },
+          message: {
+            type: 'string',
+          },
+        },
+        required: ['code', 'message'],
       },
     },
   },
